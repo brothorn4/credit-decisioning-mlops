@@ -4,7 +4,7 @@ import plotly.express as px
 
 def analyze_features_iv(df, features, target='Default_Flag', bins=10, bin_method='quantile', show_plots=True):
     """
-    Analyze a list of features and calculate their Information Values.
+    Analyze a list of features and calculate their Information Values (IV).
 
     INPUT:
     - df: DataFrame with features and target variable
@@ -49,3 +49,17 @@ def analyze_features_iv(df, features, target='Default_Flag', bins=10, bin_method
         fig.show()
 
     return iv_df
+
+def select_features_by_iv(iv_df, threshold=0.02):
+    """
+    Select features with IV >= threshold.
+
+    INPUT:
+    - iv_df: DataFrame with 'Feature' and 'IV' columns
+    - threshold: Minimum IV threshold
+
+    OUTPUT:
+    - selected_features: List of features meeting threshold
+    """
+    selected_features = iv_df[iv_df['IV'] >= threshold]['Feature'].tolist()
+    return selected_features
