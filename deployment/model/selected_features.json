@@ -1,0 +1,11 @@
+[
+    "FICO_Score",
+    "DTI_Ratio_Bin",
+    "Num_Inquiries",
+    "Utilization_Ratio_Bin",
+    "Income_Bin",
+    "Months_Oldest_Trade",
+    "Num_Tradelines",
+    "Derogs_30DPD",
+    "Derogs_60DPD"
+]
