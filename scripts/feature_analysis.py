@@ -29,7 +29,7 @@ def analyze_features_iv(df, features, target='Default_Flag', bins=10, bin_method
             else:
                 df['bin'] = df[feature]
             
-            grouped = df.groupby('bin')[target].agg(['count', 'sum'])
+            grouped = df.groupby('bin', observed=False)[target].agg(['count', 'sum'])
             grouped['non_event'] = grouped['count'] - grouped['sum']
             grouped['event_rate'] = grouped['sum'] / grouped['sum'].sum()
             grouped['non_event_rate'] = grouped['non_event'] / grouped['non_event'].sum()
