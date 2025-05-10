@@ -2,16 +2,16 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import PowerTransformer
 
-def create_binned_features(df, utilization_col='Utilization', dti_col='DTI', income_col='Income',
+def create_binned_features(df, utilization_col='Utilization_Ratio', dti_col='DTI_Ratio', income_col='Income',
                            bins=5, bin_labels=None, bin_method='quantile', drop_original=True):
     """
     Create binned versions of Utilization, DTI, and Income columns, and optionally drop original columns.
 
     INPUT:
     - df: DataFrame with numeric columns
-    - utilization_col: Name of Utilization column
-    - dti_col: Name of DTI column
-    - income_col: Name of Income column
+    - utilization_col: Name of Utilization column (default: 'Utilization_Ratio')
+    - dti_col: Name of DTI column (default: 'DTI_Ratio')
+    - income_col: Name of Income column (default: 'Income')
     - bins: Number of bins to create
     - bin_labels: Optional list of labels for bins
     - bin_method: 'quantile' (default) or 'uniform'
@@ -37,21 +37,24 @@ def create_binned_features(df, utilization_col='Utilization', dti_col='DTI', inc
 
     return df
 
+
 def handle_skewness(df, exclude_cols=None, skew_threshold=1.0, method='yeo-johnson'):
     """
     Detect and correct skewness in numeric columns.
 
     INPUT:
     - df: DataFrame
-    - exclude_cols: List of columns to exclude from transformation
+    - exclude_cols: List of columns to exclude from transformation (if None, default list applied)
     - skew_threshold: Absolute skew value above which to apply transform
     - method: 'yeo-johnson' (default) or 'log'
 
     OUTPUT:
     - df: DataFrame with transformed columns
     """
+    # Default exclusion aligned with production schema
     if exclude_cols is None:
-        exclude_cols = []
+        exclude_cols = ['Application_ID', 'Default_Flag',
+                        'Utilization_Ratio_Bin', 'DTI_Ratio_Bin', 'Income_Bin']
     
     numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
     numeric_cols = [col for col in numeric_cols if col not in exclude_cols]

@@ -33,7 +33,14 @@ def analyze_features_iv(df, features, target='Default_Flag', bins=10, bin_method
             grouped['non_event'] = grouped['count'] - grouped['sum']
             grouped['event_rate'] = grouped['sum'] / grouped['sum'].sum()
             grouped['non_event_rate'] = grouped['non_event'] / grouped['non_event'].sum()
+            
             grouped['woe'] = np.log((grouped['event_rate'] + 1e-10) / (grouped['non_event_rate'] + 1e-10))
+            
+            # Handle infinite or NaN WoE values
+            if not np.isfinite(grouped['woe']).all():
+                print(f"⚠️ WoE invalid values encountered for feature '{feature}' → replacing inf/NaN with 0.")
+            grouped['woe'] = grouped['woe'].replace([np.inf, -np.inf], 0).fillna(0)
+            
             grouped['iv'] = (grouped['event_rate'] - grouped['non_event_rate']) * grouped['woe']
             iv = grouped['iv'].sum()
 
